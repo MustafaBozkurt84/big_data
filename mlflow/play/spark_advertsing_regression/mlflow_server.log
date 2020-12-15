@@ -1,0 +1,40 @@
+[2020-11-28 19:44:02 +0300] [18221] [INFO] Starting gunicorn 20.0.4
+[2020-11-28 19:44:02 +0300] [18221] [INFO] Listening at: http://0.0.0.0:5000 (18221)
+[2020-11-28 19:44:02 +0300] [18221] [INFO] Using worker: sync
+[2020-11-28 19:44:02 +0300] [18231] [INFO] Booting worker with pid: 18231
+[2020-11-28 19:44:02 +0300] [18232] [INFO] Booting worker with pid: 18232
+[2020-11-28 19:44:02 +0300] [18233] [INFO] Booting worker with pid: 18233
+[2020-11-28 19:44:02 +0300] [18234] [INFO] Booting worker with pid: 18234
+2020-11-28 20:11:57,647 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2020-11-28 23:04:17 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:18231)
+[2020-11-28 23:04:17 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:18232)
+[2020-11-28 23:04:17 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:18233)
+[2020-11-28 23:04:17 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:18234)
+[2020-11-28 23:04:17 +0300] [18234] [INFO] Worker exiting (pid: 18234)
+[2020-11-28 23:04:17 +0300] [18233] [INFO] Worker exiting (pid: 18233)
+[2020-11-28 23:04:17 +0300] [18231] [INFO] Worker exiting (pid: 18231)
+[2020-11-28 23:04:17 +0300] [18232] [INFO] Worker exiting (pid: 18232)
+[2020-11-28 23:04:18 +0300] [23144] [INFO] Booting worker with pid: 23144
+[2020-11-28 23:04:18 +0300] [23145] [INFO] Booting worker with pid: 23145
+[2020-11-28 23:04:18 +0300] [23146] [INFO] Booting worker with pid: 23146
+[2020-11-28 23:04:18 +0300] [23147] [INFO] Booting worker with pid: 23147
+2020-11-28 23:05:21,647 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2020-11-28 23:13:05,151 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2020-11-29 07:33:23 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:23144)
+[2020-11-29 07:33:23 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:23145)
+[2020-11-29 07:33:23 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:23146)
+[2020-11-29 07:33:23 +0300] [18221] [CRITICAL] WORKER TIMEOUT (pid:23147)
+[2020-11-29 07:33:23 +0300] [23144] [INFO] Worker exiting (pid: 23144)
+[2020-11-29 07:33:23 +0300] [23145] [INFO] Worker exiting (pid: 23145)
+[2020-11-29 07:33:23 +0300] [23146] [INFO] Worker exiting (pid: 23146)
+[2020-11-29 07:33:23 +0300] [23147] [INFO] Worker exiting (pid: 23147)
+[2020-11-29 07:33:24 +0300] [26966] [INFO] Booting worker with pid: 26966
+[2020-11-29 07:33:24 +0300] [26967] [INFO] Booting worker with pid: 26967
+[2020-11-29 07:33:24 +0300] [26968] [INFO] Booting worker with pid: 26968
+[2020-11-29 07:33:24 +0300] [26969] [INFO] Booting worker with pid: 26969
+2020-11-29 07:37:00,275 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2020-11-29 08:13:16,059 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2020-11-29 08:32:20,737 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2020-11-29 08:32:27,236 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2020-11-29 08:48:59 +0300] [18221] [INFO] Handling signal: term
+[2020-11-29 08:48:59 +0300] [18221] [INFO] Shutting down: Master

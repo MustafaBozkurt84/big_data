@@ -1,0 +1,229 @@
+* Spark uses micro-bacth streaming, continous process is still experiment.
+
+* Supports exactly-once stream processing.
+
+* This has some cost. Spark cannot process miliseconds latency. 
+
+* In this fault tolerant and exactly-once mode latency might become a few seconds. 
+
+* But there are very few business cases requiring subsecond latency.
+
+* A few seconds latency is fairly enough of most cases.
+
+* Submit streaming wordcount
+
+
+
+STATELESS 
+=========================
+File source (csv) stateless transformations example 
+-----------------------------------
+Terminal-1:
+(venvspark) [train@localhost stateless]$ spark-submit --master yarn \
+file_source_csv_stateless.py
+
+Terminal-2: 
+(venvspark) [train@localhost data-generator]$ python dataframe_to_log.py -idx True
+
+
+
+File source (text) stateless 
+---------------------------------
+Terminal-1
+(venvspark) [train@localhost stateless]$ spark-submit --master yarn \ stateless/file_source_text_stateless.py
+
+
+Terminal-2 
+(venvspark) [train@localhost data-generator]$ python dataframe_to_log.py -b 2.5 -z 4 -idx True
+
+
+
+
+
+
+
+STATEFULL
+=========================
+
+Socker source wordcount
+---------------------------------
+Terminal-1
+(venvspark) [train@localhost ~]$ hdfs dfs -rm -R -skipTrash /user/train/wordCountCheckpoint
+
+(venvspark) [train@localhost data-generator]$ nc -lk 9999
+
+
+
+Terminal-2
+(venvspark) [train@localhost statefull]$ spark-submit --master yarn wordcount_from_socket.py
+
+Ctrl+C for Terminal-2
+Ctrl+C for Terminal-1
+
+
+
+
+
+
+
+
+Recovering from Failures with Exactly-Once Guarantees
+====================================================
+Terminal-1: 
+(venvspark) [train@localhost ~]$ rm -rf /home/train/data-generator/output/*
+(venvspark) [train@localhost ~]$ hdfs dfs -rm -R -skipTrash hdfs://localhost:9000/user/train/exactly_once_guarantee
+
+(venvspark) [train@localhost exactly-once]$ spark-submit --master yarn from_file_exactly_once.py
+
+
+After yarn application has started
+
+Terminal-2:
+(venvspark) [train@localhost data-generator]$ python dataframe_to_log.py -b 1.0 -z 4 -idx True -r 5
+
+
+After a while stop yarn app from Terminal-1 wait and restart
+
+
+
+Batch: 4
+-------------------------------------------
++---------------------------------------------------------+
+|value                                                    |
++---------------------------------------------------------+
+|16,5.4,3.9,1.3,0.4,Iris-setosa,2020-08-26 11:33:14.868206|
+|17,5.1,3.5,1.4,0.3,Iris-setosa,2020-08-26 11:33:15.869574|
+|18,5.7,3.8,1.7,0.3,Iris-setosa,2020-08-26 11:33:16.875260|
+|19,5.1,3.8,1.5,0.3,Iris-setosa,2020-08-26 11:33:17.877819|
++---------------------------------------------------------+
+^CTraceback (most recent call last):
+  File "/home/train/venvspark/dev/06_spark_streaming/exactly-once/from_file_exactly_once.py", line 29, in <module>
+    streamingQuery.awaitTermination()
+  File "/opt/manual/spark/python/pyspark/sql/streaming.py", line 103, in awaitTermination
+    return self._jsq.awaitTermination()
+  File "/opt/manual/spark/python/lib/py4j-0.10.9-src.zip/py4j/java_gateway.py", line 1303, in __call__
+  File "/opt/manual/spark/python/lib/py4j-0.10.9-src.zip/py4j/java_gateway.py", line 1033, in send_command
+  File "/opt/manual/spark/python/lib/py4j-0.10.9-src.zip/py4j/java_gateway.py", line 1200, in send_command
+  File "/usr/lib64/python3.6/socket.py", line 586, in readinto
+    return self._sock.recv_into(b)
+  File "/opt/manual/spark/python/pyspark/context.py", line 274, in signal_handler
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+
+
+Restart app again 
+(venvspark) [train@localhost ~]$ spark-submit --master yarn venvspark/dev/06_spark_streaming/exactly-once/from_file_exactly_once.py
+
+
+
+Tekrar çalışınca kaldığı yerden devam edecektir.
+-------------------------------------------
++---------------------------------------------------------+
+|value                                                    |
++---------------------------------------------------------+
+|20,5.4,3.4,1.7,0.2,Iris-setosa,2020-08-26 11:33:18.894882|
+|21,5.1,3.7,1.5,0.4,Iris-setosa,2020-08-26 11:33:19.903369|
+|22,4.6,3.6,1.0,0.2,Iris-setosa,2020-08-26 11:33:20.907816|
+|23,5.1,3.3,1.7,0.5,Iris-setosa,2020-08-26 11:33:21.911178|
++---------------------------------------------------------+
+
+-------------------------------------------
+Batch: 6
+-------------------------------------------
++---------------------------------------------------------+
+|value                                                    |
++---------------------------------------------------------+
+|24,4.8,3.4,1.9,0.2,Iris-setosa,2020-08-26 11:33:22.926390|
+|25,5.0,3.0,1.6,0.2,Iris-setosa,2020-08-26 11:33:23.928104|
+|26,5.0,3.4,1.6,0.4,Iris-setosa,2020-08-26 11:33:24.929621|
+|27,5.2,3.5,1.5,0.2,Iris-setosa,2020-08-26 11:33:25.931520|
++---------------------------------------------------------+
+
+-------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+Read From Kafka
+=================
+
+Start Kafka
+(venvspark) [train@localhost ~]$ zookeeper-server-start.sh -daemon /opt/manual/kafka/config/zookeeper.properties
+(venvspark) [train@localhost ~]$ kafka-server-start.sh -daemon /opt/manual/kafka/config/server.properties
+
+Is test1 topic exist?
+(venvspark) [train@localhost ~]$ kafka-topics.sh --list --bootstrap-server localhost:9092
+
+
+If test1 is not exist create
+(venvspark) [train@localhost ~]$ kafka-topics.sh --bootstrap-server localhost:9092 \
+--create --topic test1 --partitions 3 \
+--replication-factor 1
+
+
+
+
+Terminal-1:
+---------------
+Start spark app 
+(venvspark) [train@localhost kafka]$ spark-submit --master yarn \
+--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.0  read_from_kafka.py
+
+
+Wait until yarn starts to see 
+Batch: 0
+-------------------------------------------
++---+-----+-----+---------+------+---------+
+|key|value|topic|partition|offset|timestamp|
++---+-----+-----+---------+------+---------+
++---+-----+-----+---------+------+---------+
+
+
+Terminal-2:
+----------------
+Start data_generator to produce iris data to test1 topic
+(venvspark) [train@localhost data-generator]$ python dataframe_to_kafka.py
+
+
+Write to Kafka 
+=================
+Terminal-1:
+------------
+Create kafka topic 
+(venvspark) [train@localhost data_generator]$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test2 \
+replication-factor 1 --partitions 3 --config max.message.bytes=64000 --config flush.messages=1 \
+--config retention.bytes=100000000 --config retention.ms=604800
+
+Max 95 mb delete after 10 mins 
+
+Data generator ile test1 topine mesaj prduce et
+(venvspark) [train@localhost data-generator]$ python dataframe_to_kafka.py 
+
+
+Terminal-2
+----------
+(venvspark) [train@localhost ~]$ spark-submit --master yarn --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.0  write_to_kafka.py
+
+
+Terminal-3
+----------
+Console consumer ile test2 topiğini consume et 
+
+[train@localhost data-generator]$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test2
+
+
+
+
+
+
+
+

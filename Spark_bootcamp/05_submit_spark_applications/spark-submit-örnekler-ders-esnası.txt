@@ -1,0 +1,58 @@
+ spark-submit --master yarn --deploy-mode client \
+ --executor-memory 2G \
+ --executor-cores 2 \
+ --num-executors 4 \
+ --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
+ --class com.veribilimiokulu.DilisimBlogSparkKaynakTahsisi \
+ spark-remote-cluster-1.0-SNAPSHOT.jar
+ 
+ 
+ 
+ 
+ 
+spark-submit --master yarn --deploy-mode cluster \
+ --executor-memory 3072m \
+ --executor-cores 3 \
+ --num-executors 4 \
+ --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
+ --class com.veribilimiokulu.DilisimBlogSparkKaynakTahsisi \
+spark-remote-cluster-1.0-SNAPSHOT.jar
+ 
+
+
+
+spark-submit --master yarn --deploy-mode client \
+ --executor-memory 1500m \
+ --executor-cores 1 \
+ --conf spark.executor.extraJavaOptions=-XX:+UseG1GC \
+ --class com.veribilimiokulu.DilisimBlogSparkKaynakTahsisi \
+ spark-remote-cluster-1.0-SNAPSHOT.jar
+ 
+ 
+ 
+ 
+ 
+spark-submit \
+--master yarn \
+--deploy-mode client \
+simple_submit.py \
+-i hdfs://localhost:9000/user/train/datasets/Advertising.csv \
+-f csv
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
